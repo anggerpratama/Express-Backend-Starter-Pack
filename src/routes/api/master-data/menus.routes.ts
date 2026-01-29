@@ -10,11 +10,11 @@ export function createMenusRoutes(): Router {
     const menuController = container.resolve(MenuController)
 
     router.get('/' , menuController.index.bind(menuController))
-    router.get('/:id' , menuController.show.bind(menuController))
+    router.get('/:_id' , menuController.show.bind(menuController))
     router.post('/' , validateDto(MenuDto)  , menuController.store.bind(menuController))
     router.post('/multiple' , menuController.multipleStore.bind(menuController))
-    router.put('/:id' , validateDto(MenuDto) ,menuController.update.bind(menuController))
-    router.delete('/' , menuController.delete.bind(menuController))
+    router.put('/:_id' , validateDto(MenuDto) ,menuController.update.bind(menuController))
+    router.patch('/multi-delete' , menuController.delete.bind(menuController))
 
     return router
 }

@@ -10,6 +10,9 @@ import { RealEscapeStringParam } from '../../../infrastructure/functions/real-es
 import { paginateResultFunc } from '../../../infrastructure/paginations/pagination-result';
 import { UserDto } from '../dtos/user.dto';
 import { DeleteEntityDto } from '../../../infrastructure/dtos/delete-entity.dto';
+import { RoleRepository } from '../../master-data/roles/repositories/role.repository';
+import { NotFoundError } from '../../../infrastructure/errors/NotFoundError';
+import { DetailUserAccessMenuFactory } from '../factories/detail-use-access-menu.factory';
 
 @injectable()
 export class UserController extends Controller {
@@ -20,6 +23,7 @@ export class UserController extends Controller {
     constructor(
         // repositories
         private readonly userRepository: UserRepository,
+        private readonly rolesRepository: RoleRepository,
         // services
         private readonly userService: UserService,
     ) {
@@ -127,5 +131,34 @@ export class UserController extends Controller {
         }
 
     }
+
+    // other function
+    /**
+     * Retrieves the access menu details for the currently authenticated user.
+     *
+     * @param req - Express request containing the authenticated user's token.
+     * @param res - Express response to send the result.
+     */
+    public async getUserAccessMenu (req : UsersRequest , res : Response){
+
+        try {
+            const detailUser = await this.userRepository.showDetailData(req.token?.id ?? "")
+            if (detailUser == null) throw new NotFoundError("Data User tidak ditemukan")
+            
+            const getUserRole = await this.rolesRepository.showDetailData(detailUser.roleId)
+            if (getUserRole == null) throw new NotFoundError("Data Role tidak ditemukan")
+
+            return this.responseBuilder.successMessage(res , `Sukses Mendapatkan Data User Access Menu Detail` , 
+                DetailUserAccessMenuFactory(getUserRole.roleMenus)
+            )
+
+        } catch (error) {
+            console.error(error)
+            this.errorHandleResponse(error , `Gagal Mendapatkan Data ${this.MODUL_NAME}` , res)            
+        }
+
+    }
+
+
 
 }

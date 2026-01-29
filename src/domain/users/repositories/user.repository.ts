@@ -25,6 +25,9 @@ export class UserRepository {
             skip: skip,
             order: {
                 createdAt: 'DESC'
+            },
+            relations: {
+                role: true
             }
         })
         
@@ -32,9 +35,26 @@ export class UserRepository {
 
     public async showDetailData(_id: string): Promise<UserEntity | null> {
         return await this.userRepository.findOne({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phoneNumber: true,
+                nik: true,
+                nip: true,
+                profilePicture: true,
+                role: true,
+                lastLogin: true,
+                expiredSessionTime: true,
+                sessionId: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+                deletedAt: true,
+            },
             where: {
                 id: _id
-            }
+            },
         })
     }
 

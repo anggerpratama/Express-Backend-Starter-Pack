@@ -10,10 +10,10 @@ export function createUserRoutes(): Router {
     const userController = container.resolve(UserController)
 
     router.get('/' , userController.index.bind(userController))
-    router.get('/:id' , userController.show.bind(userController))
+    router.get('/:_id' , userController.show.bind(userController))
     router.post('/' , validateDto(UserDto)  , userController.store.bind(userController))
-    router.put('/:id' , validateDto(UserDto) ,userController.update.bind(userController))
-    router.delete('/' , userController.delete.bind(userController))
+    router.put('/:_id' , validateDto(UserDto) ,userController.update.bind(userController))
+    router.patch('/multi-delete' , userController.delete.bind(userController))
 
     return router
 }

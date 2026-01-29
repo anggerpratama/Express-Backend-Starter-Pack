@@ -3,6 +3,8 @@ import { ForbiddenError } from "../infrastructure/errors/ForbiddenError"
 import { UnauthorizedAppError } from "../infrastructure/errors/UnauthorizedAppError"
 import { UnprocessableEntityError } from "../infrastructure/errors/UnporcessableEntityError"
 import { ResponseBuilders } from "../infrastructure/responses/ResponseBuilders"
+import { NotFoundError } from "../infrastructure/errors/NotFoundError"
+import { BadRequestError } from "../infrastructure/errors/BadRequestError"
 
 export class Controller {
 
@@ -23,6 +25,12 @@ export class Controller {
             return this.responseBuilder.errorsMessage(res , message , error.status , error)                
         }
         if (error instanceof ForbiddenError){
+            return this.responseBuilder.errorsMessage(res , message , error.status , error)                
+        }
+        if (error instanceof NotFoundError){
+            return this.responseBuilder.errorsMessage(res , message , error.status , error)                
+        }
+        if (error instanceof BadRequestError){
             return this.responseBuilder.errorsMessage(res , message , error.status , error)                
         }
         // log all internal server error 500

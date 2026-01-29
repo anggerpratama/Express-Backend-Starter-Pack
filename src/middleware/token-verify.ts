@@ -34,7 +34,10 @@ export const tokenVerify = async (req : any , res: Response , next : NextFunctio
         let findUserToken = await userRepository.findByParamsWIRole({sessionId : token})
 
         if(findUserToken == null) {
-            throw new UnauthorizedAppError("Token tidak ditemukan, silahkan login kembali")
+            throw new UnauthorizedAppError("Session ID tidak ditemukan, silahkan login kembali")
+        }
+        if (findUserToken.expiredSessionTime && findUserToken.expiredSessionTime < new Date()) {
+            throw new UnauthorizedAppError("Session ID sudah hangus, silahkan login kembali") 
         }
         const findUserRole = findUserToken.role
         if (findUserRole == null) {
@@ -95,13 +98,13 @@ export const tokenVerify = async (req : any , res: Response , next : NextFunctio
         next() 
 
     } catch (error) {
-        console.log(error)
-        if (error instanceof Error) {
-            if (error.name == "TokenExpiredError") {
-                return new ResponseBuilders().errorsMessage(res , "Token sudah hangus, silahkan login kembali" , 401 , error)  
-            }
-        }
         if (error instanceof NotFoundError) {
+            return new ResponseBuilders().errorsMessage(res , error.message , error.status , error)  
+        }
+        if (error instanceof UnauthorizedAppError) {
+            return new ResponseBuilders().errorsMessage(res , error.message , error.status , error)  
+        }
+        if (error instanceof BadRequestError) {
             return new ResponseBuilders().errorsMessage(res , error.message , error.status , error)  
         }
         return new ResponseBuilders().errorsMessage(res , "Hak akses ditolak, silahkan login terlebih dahulu" , 401 , error)

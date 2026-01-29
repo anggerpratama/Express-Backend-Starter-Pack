@@ -35,6 +35,11 @@ export class RoleRepository {
         return await this.roleRepository.findOne({
             where: {
                 id: _id
+            },
+            relations: {
+                roleMenus: {
+                    menu: true
+                }
             }
         })
     }

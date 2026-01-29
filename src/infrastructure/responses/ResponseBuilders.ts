@@ -85,25 +85,4 @@ export class ResponseBuilders {
 
     }
 
-    /**
-     * 
-     * Response Errors Builder
-     * 
-     * @param res 
-     * @param message 
-     * @param code 
-     * @param errors 
-     */
-
-    public errorsValidator(res:any , message: string , code: number , errors: any) : any{
-
-        res.status(code);
-        res.json({
-            status: false,
-            message: message,
-            errors : errors.errors
-        });
-
-    }
-
 }

@@ -8,6 +8,7 @@ import { NotFoundError } from "../../../infrastructure/errors/NotFoundError";
 import { BadRequestError } from "../../../infrastructure/errors/BadRequestError";
 import { GenerateRandomString } from '../../../infrastructure/functions/generate-random-string';
 import { UserLoginFactory } from '../factories/user-login.factory';
+import { UnauthorizedAppError } from '../../../infrastructure/errors/UnauthorizedAppError';
 
 @injectable()
 export class AuthService {
@@ -17,9 +18,9 @@ export class AuthService {
 
     public async login(data : UserLoginDto) {
         
-        let user = await this.userRepository.findByParamsWIRole({email: data.email})
+        let user = await this.userRepository.findByParamsWIRole({email: data.username})
 
-        if (user == null) throw new NotFoundError("User tidak ditemukan")
+        if (user == null) throw new UnauthorizedAppError("User tidak ditemukan")
 
         if (user.status != true) throw new BadRequestError("User tidak aktif, silahkan kontak admin")
 

@@ -65,7 +65,6 @@ export class MenuController extends Controller {
     public async show (req : MenusRequest , res : Response){
 
         try {
-
             const detailMenus = await this.menuRepository.showDetailData(req.params._id)
 
             return this.responseBuilder.successMessage(res , `Sukses Mendapatkan Data ${this.MODUL_NAME} Detail` , 

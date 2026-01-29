@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 export class RoleDto {
     @IsString()
@@ -39,9 +39,11 @@ export class RoleMenusDto {
     @IsString({ each: true })
     action!: string[];
 
+    @IsOptional()
     @IsString()
-    group_name!: string;
+    groupName!: string;
 
+    @IsOptional()
     @IsString()
-    group_id!: string;
+    groupId!: string;
 }

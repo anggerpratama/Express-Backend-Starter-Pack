@@ -87,7 +87,7 @@ export class MenuService {
 
     }
 
-    public async multiDelete(data: DeleteEntityDto) {
+    public async multiDelete(data: DeleteEntityDto) : Promise<boolean> {
 
         const queryRunner = AppDataSource.createQueryRunner()
         await queryRunner.connect()
@@ -97,6 +97,9 @@ export class MenuService {
             await queryRunner.manager.softDelete(MenuEntity, {
                 id: In(data.ids as string[]),
             });
+            await queryRunner.commitTransaction()
+            
+            return true
         } catch (error) {
             await queryRunner.rollbackTransaction()
             throw error

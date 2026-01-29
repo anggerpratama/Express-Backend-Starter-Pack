@@ -95,6 +95,9 @@ export class UserService {
             await queryRunner.manager.softDelete(UserEntity, {
                 id: In(data.ids as string[]),
             });
+            await queryRunner.commitTransaction()
+            
+            return true
         } catch (error) {
             await queryRunner.rollbackTransaction()
             throw error

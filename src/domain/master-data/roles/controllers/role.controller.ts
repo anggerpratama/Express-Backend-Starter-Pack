@@ -106,6 +106,7 @@ export class RoleController extends Controller {
             const result = await this.roleService.update(req.body as RoleDto, req.params._id)
             return this.responseBuilder.successMessage(res , `Sukses Merubah Data : ${this.MODUL_NAME}` , result)
         } catch (error) {
+            console.log(error)
             this.errorHandleResponse(error , `Gagal Merubah Data : ${this.MODUL_NAME}` , res)
         }
 
